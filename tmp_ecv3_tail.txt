@@ -1,0 +1,50 @@
+              <button
+                onClick={loadMore}
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Load More Cherries
+              </button>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {filteredCherries.length === 0 && !loading && (
+            <div className="text-center py-12">
+              <div className="text-gray-500 dark:text-gray-400 text-lg mb-4">
+                {selectedCategory 
+                  ? `No ${categoryDockItems.find(item => item.id === selectedCategory)?.name} cherries found`
+                  : 'No cherries found'
+                }
+              </div>
+              <div className="text-gray-400 dark:text-gray-500 text-sm">
+                {selectedCategory 
+                  ? 'Try adjusting your filters or check back later for new content in this category.'
+                  : 'Try adjusting your filters or check back later for new content.'
+                }
+              </div>
+              {selectedCategory && (
+                <button
+                  onClick={() => handleCategoryFilter(null)}
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Clear Category Filter
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+        <GuidePanel />
+      </div>
+
+      {/* Help Modal */}
+      {showHelpModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Welcome to ChatSaid</h2>
+                <button
+                  onClick={() => setShowHelpModal(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  title="Close help modal"
+                  aria-label="Close help modal"

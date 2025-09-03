@@ -1,0 +1,35 @@
+                    aria-label="Assistant input"
+                  />
+                  <button className="rounded-md bg-rose-500 px-3 py-2 text-sm text-white hover:bg-rose-500/90">Send</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function PreviewSimple({ text }: { text: string }) {
+  // Very small markdown-ish preview without extra deps
+  const html = useMemo(() => {
+    const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c] as string));
+    const lines = text.split(/\n/);
+    const out: string[] = [];
+    for (const ln of lines) {
+      if (/^\s*#\s+/.test(ln)) { out.push(`<h2>${esc(ln.replace(/^\s*#\s+/, ''))}</h2>`); continue; }
+      if (/^\s*##\s+/.test(ln)) { out.push(`<h3>${esc(ln.replace(/^\s*##\s+/, ''))}</h3>`); continue; }
+      // inline: **bold**, *italic*, `code`
+      let t = esc(ln);
+      t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+      // links [text](url)
+      t = t.replace(/\[([^\]]+)\]\((https?:[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      out.push(`<p>${t || '&nbsp;'}</p>`);
+    }
+    return out.join('\n');
+  }, [text]);
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}

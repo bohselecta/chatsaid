@@ -1,0 +1,160 @@
+  // Check for collisions and adjust dock position
+  useEffect(() => {
+    const checkCollisions = () => {
+      if (!headerRef.current || !dockRef.current || !searchRef.current || !userMenuRef.current) {
+        return;
+      }
+
+      const headerRect = headerRef.current.getBoundingClientRect();
+      const dockRect = dockRef.current.getBoundingClientRect();
+      const searchRect = searchRef.current.getBoundingClientRect();
+      const userMenuRect = userMenuRef.current.getBoundingClientRect();
+
+      // Check if dock would overlap with search or user menu
+      const dockRight = dockRect.right;
+      const searchLeft = searchRect.left;
+      const userMenuLeft = userMenuRect.left;
+
+      // More conservative collision detection with better spacing
+      const minSpacing = 30; // Increased from 20 to 30px
+      
+      // If dock would collide, move it to hamburger menu
+      if (dockRight > searchLeft - minSpacing || dockRight > userMenuLeft - minSpacing) {
+        setDockInHeader(false);
+      } else {
+        setDockInHeader(true);
+      }
+    };
+
+    // Only check collisions if we're on a screen size where the dock should be visible
+    const checkCollisionsIfNeeded = () => {
+      if (window.innerWidth >= 1280) { // xl breakpoint
+        checkCollisions();
+      } else {
+        setDockInHeader(false);
+      }
+    };
+
+    checkCollisionsIfNeeded();
+    window.addEventListener('resize', checkCollisionsIfNeeded);
+    return () => window.removeEventListener('resize', checkCollisionsIfNeeded);
+  }, []);
+
+  const handleReaction = async (cherryId: string, reactionType: string) => {
+    try {
+      const response = await fetch('/api/reactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cherryId,
+          userId: 'anonymous', // For demo purposes
+          reactionType
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add reaction');
+      }
+
+      console.log(`Added ${reactionType} reaction to cherry ${cherryId}`);
+    } catch (error) {
+      console.error('Reaction error:', error);
+    }
+  };
+
+  const handleSaveToCategory = async (cherryId: string, category: string) => {
+    try {
+      // For demo purposes, we'll just update local state
+      // In a real app, this would call an API to save to the user's collection
+      setUserSavedCategories(prev => {
+        const currentCategories = prev[cherryId] || [];
+        const isAlreadySaved = currentCategories.includes(category);
+        
+        if (isAlreadySaved) {
+          // Remove from category
+          return {
+            ...prev,
+            [cherryId]: currentCategories.filter(cat => cat !== category)
+          };
+        } else {
+          // Add to category
+          return {
+            ...prev,
+            [cherryId]: [...currentCategories, category]
+          };
+        }
+      });
+
+      console.log(`Saved cherry ${cherryId} to category ${category}`);
+    } catch (error) {
+      console.error('Save to category error:', error);
+    }
+  };
+
+  const handleFollowBot = (botName: string) => {
+    setFollowedBots(prev => 
+      prev.includes(botName) 
+        ? prev.filter(name => name !== botName)
+        : [...prev, botName]
+    );
+    console.log(`Toggled follow for bot: ${botName}`);
+  };
+
+  const handleCategoryFilter = (categoryId: string | null) => {
+    setSelectedCategory(categoryId);
+    const next = new URLSearchParams(params?.toString() || '');
+    if (categoryId) next.set('cat', categoryId); else next.delete('cat');
+    router.replace(`/canopy?${next.toString()}`, { scroll: false });
+  };
+
+  const handleCardCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    console.log(`Filtering by card category: ${categoryId}`);
+  };
+
+
+
+  // Filter cherries based on selected category
+  const getFilteredCherries = () => {
+    let filtered = cherries.filter(cherry => {
+      if (contentFilter === 'ai-only') {
+        return cherry.bot_attribution || cherry.simulated_activity;
+      }
+      if (contentFilter === 'human-only') {
+        return !cherry.bot_attribution && !cherry.simulated_activity;
+      }
+      return true;
+    });
+
+    // Apply category filter if selected
+    if (selectedCategory) {
+      filtered = filtered.filter(cherry => {
+        const tags = cherry.tags || [];
+        
+        // Map category IDs to tag patterns
+        const categoryTagMap: Record<string, string[]> = {
+          'funny': ['humor', 'funny', 'comedy'],
+          'weird': ['philosophy', 'metaphysical', 'spiritual', 'mystical', 'weird'],
+          'technical': ['coding', 'tech', 'programming'],
+          'research': ['research', 'academic', 'study'],
+          'ideas': ['creativity', 'ideas', 'inspiration']
+        };
+        
+        const categoryTags = categoryTagMap[selectedCategory] || [];
+        return categoryTags.some(tag => tags.includes(tag));
+      });
+    }
+
+    // Apply text query filter
+    if (query.trim()) {
+      const ql = query.trim().toLowerCase();
+      filtered = filtered.filter(cherry => {
+        const text = `${cherry.title || ''} ${cherry.content || ''}`.toLowerCase();
+        const tags = (cherry.tags || []).join(' ').toLowerCase();
+        return text.includes(ql) || tags.includes(ql);
+      });
+    }
+
+    return filtered;
+  };
+

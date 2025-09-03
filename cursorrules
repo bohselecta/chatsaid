@@ -1,0 +1,41 @@
+# Cursor Project Rules — chatsaid.com MVP
+
+## Purpose
+Ship a clean, minimal, *scalable* social app (feed + auth + posts + profiles) using **Next.js (App Router, TypeScript)** + **Supabase** (Auth + Postgres + RLS). Keep DX top-notch and code quality high.
+
+## Architectural Tenets
+1. **Serverless-first**: Prefer Supabase (Postgres + Auth) and edge-safe code. No custom servers.
+2. **Security**: Use Row-Level Security (RLS). Never ship the service role key to the client. Use anon key only.
+3. **Simplicity**: Small components, no global state until necessary. Favor React Server Components with small client islands.
+4. **Scalability**: Clean DB schema, indexes, pagination, optimistic UI. All queries paginated.
+5. **Accessibility**: Semantic HTML, keyboard support, ARIA where needed.
+6. **Styling**: Tailwind CSS (preconfigured). Avoid CSS frameworks beyond Tailwind for MVP.
+7. **Testing**: Component tests via Vitest + React Testing Library for any critical UI. Lint & type-check must pass.
+
+## Code Style
+- TypeScript strict.
+- ESLint + Prettier defaults. No any-typed escape hatches without a TODO and reason.
+- Filenames: `PascalCase` for components, `camelCase` for helpers, `SNAKE_UPPER` for consts.
+- No magic strings. Centralize in `lib/constants.ts` if reused thrice.
+
+## Boundaries
+- `app/` for routes (RSC by default).
+- `components/` for shared UI.
+- `lib/` for client SDKs and utilities.
+- `supabase/` holds SQL and migrations (no secrets).
+- Never commit `.env*` with secrets.
+
+## Pull Requests (AI or Human)
+- Include description, screenshots of UI changes, and checkboxes:
+  - [ ] Types pass (`pnpm typecheck`)
+  - [ ] Lint passes (`pnpm lint`)
+  - [ ] Tests pass (`pnpm test`)
+  - [ ] No service key leaked
+
+## Tasks Guardrails for Cursor
+- Before generating code, restate the acceptance criteria.
+- Generate incremental diffs only inside allowed dirs.
+- After changes, run:
+  - `pnpm i`
+  - `pnpm lint && pnpm typecheck`
+  - `pnpm dev` (manual verification)

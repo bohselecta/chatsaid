@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- saucer body -->
+  <ellipse cx="12" cy="12" rx="9" ry="3.5" fill="#FFFFFF" stroke="#151515" stroke-width="2"/>
+  <!-- dome -->
+  <path d="M6 12a6 3 0 0 1 12 0" fill="#FFFFFF" stroke="#151515" stroke-width="2" stroke-linejoin="round"/>
+  <!-- beam -->
+  <path d="M8 12 L16 12 L12 20 Z" fill="#FFFFFF" stroke="#151515" stroke-width="2" stroke-linejoin="round" opacity="0.9"/>
+</svg>

@@ -1,0 +1,200 @@
+  const filteredCherries = getFilteredCherries();
+
+  if (loading && cherries.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm h-64"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center py-12">
+            <div className="text-red-500 text-lg mb-4">Failed to load cherries</div>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-[#12151b] dark:to-[#0f1419]">
+             {/* Single Header with All Controls */}
+                   <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 shadow-sm" ref={headerRef}>
+         <div className="max-w-7xl mx-auto px-4 py-4">
+           {/* Main Header Row */}
+           <div className="flex items-center justify-between min-w-0 mb-3">
+             {/* Left side: Title and Category Dock */}
+             <div className="flex items-center space-x-4 lg:space-x-6 min-w-0 flex-1">
+               <h1 className="text-xl lg:text-2xl font-bold flex items-center text-gray-900 dark:text-gray-100 flex-shrink-0">
+                 <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 mr-2 text-red-500" />
+                 <span className="whitespace-nowrap">Canopy</span>
+               </h1>
+               
+                {/* Category Dock - shown in header when space allows */}
+                {dockInHeader && (
+                  <nav aria-label="Canopy categories" ref={dockRef} className="hidden xl:flex items-center space-x-2 min-w-0">
+                    <span className="text-xs lg:text-sm text-gray-500 dark:text-gray-400 font-medium mr-1 lg:mr-2 whitespace-nowrap">Categories:</span>
+                    <CategoryRail variant="chip" navigate={false} onSelect={(key) => handleCategoryFilter(selectedCategory === key ? null : key)} />
+                  </nav>
+                )}
+             </div>
+             
+             {/* Center: Stats - hidden on smaller screens to prevent crowding */}
+             <div className="hidden lg:block text-sm text-gray-500 dark:text-gray-400 flex-shrink-0">
+               <span className="whitespace-nowrap">
+                 {filteredCherries.length} cherries • {followedBots.length} bots followed
+                 {selectedCategory && (
+                   <span className="ml-2 text-blue-600 dark:text-blue-400">
+                     • {categoryDockItems.find(item => item.id === selectedCategory)?.name}
+                   </span>
+                 )}
+               </span>
+             </div>
+             
+             {/* Right side: Search, User Menu, and Mobile Menu */}
+             <div className="flex items-center space-x-2 lg:space-x-4 min-w-0 flex-shrink-0">
+                                     {/* Search Bar */}
+                      <div ref={searchRef} className="hidden md:flex items-center space-x-2">
+                        <Search className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <input
+                          type="search"
+                          aria-label="Search posts"
+                          value={query}
+                          onChange={(e) => setQuery(e.currentTarget.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const next = new URLSearchParams(params?.toString() || '');
+                              if (query.trim()) next.set('q', query.trim()); else next.delete('q');
+                              router.replace(`/canopy?${next.toString()}`, { scroll: false });
+                            }
+                          }}
+                          placeholder="Discover cherries..."
+                          className="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 lg:px-4 py-2 text-sm w-40 lg:w-64 focus:ring-2 focus:ring-cherry-500 focus:border-cherry-500 dark:text-gray-100 dark:placeholder-gray-400 transition-all duration-200"
+                        />
+                      </div>
+               
+                                     {/* Help Button */}
+                      <button
+                        onClick={() => setShowHelpModal(true)}
+                        className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        title="Help & Information"
+                        aria-label="Open help modal"
+                      >
+                        <Info className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                      </button>
+                      
+                      {/* User Menu (simplified for demo) */}
+                      <div ref={userMenuRef} className="hidden md:flex items-center">
+                        <button className="text-sm text-gray-700 dark:text-gray-300 hover:text-cherry-600 dark:hover:text-cherry-400 transition-colors whitespace-nowrap">
+                          Log in
+                        </button>
+                      </div>
+               
+               {/* Mobile Menu Button */}
+               <button
+                 onClick={() => setShowMobileMenu(!showMobileMenu)}
+                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                 aria-label="Toggle mobile menu"
+               >
+                 {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+               </button>
+               
+                                     {/* View Mode Toggle */}
+                      <div className="flex items-center space-x-1 lg:space-x-2 bg-gray-100 dark:bg-gray-700 rounded-lg p-1 shadow-sm">
+                        <button
+                          onClick={() => setViewMode('grid')}
+                          className={`p-1.5 lg:p-2 rounded transition-all duration-200 ${
+                            viewMode === 'grid' 
+                              ? 'bg-white dark:bg-gray-600 shadow-sm text-cherry-600 dark:text-cherry-400' 
+                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                          }`}
+                          title="Grid view"
+                          aria-label="Switch to grid view"
+                        >
+                          <Grid className="w-3 h-3 lg:w-4 lg:h-4" />
+                        </button>
+                        <button
+                          onClick={() => setViewMode('list')}
+                          className={`p-1.5 lg:p-2 rounded transition-all duration-200 ${
+                            viewMode === 'list' 
+                              ? 'bg-white dark:bg-gray-600 shadow-sm text-cherry-600 dark:text-cherry-400' 
+                              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                          }`}
+                          title="List view"
+                          aria-label="Switch to list view"
+                        >
+                          <List className="w-3 h-3 lg:w-4 lg:h-4" />
+                        </button>
+                      </div>
+             </div>
+           </div>
+
+           {/* Controls Row */}
+           <div className="flex items-center justify-between">
+             <div className="flex items-center space-x-4">
+               {/* Sort Options */}
+               <div className="flex items-center space-x-2">
+                 <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                 <label htmlFor="sort-select" className="sr-only">Sort by</label>
+                 <select
+                   id="sort-select"
+                   value={sortBy}
+                   onChange={(e) => setSortBy(e.target.value)}
+                   className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-gray-100"
+                   aria-label="Sort cherries by"
+                 >
+                   <option value="mixed">Mixed</option>
+                   <option value="newest">Newest</option>
+                   <option value="popular">Popular</option>
+                   <option value="bot-focus">Bot Focus</option>
+                 </select>
+               </div>
+
+               {/* Content Filter */}
+               <div className="flex items-center space-x-2">
+                 <Bot className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                 <label htmlFor="content-filter" className="sr-only">Filter content</label>
+                 <select
+                   id="content-filter"
+                   value={contentFilter}
+                   onChange={(e) => setContentFilter(e.target.value)}
+                   className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-gray-100"
+                   aria-label="Filter content by type"
+                 >
+                   <option value="all">All Content</option>
+                   <option value="ai-only">AI Only</option>
+                   <option value="human-only">Human Only</option>
+                 </select>
+               </div>
+
+               {/* Category Filter Clear Button */}
+               {selectedCategory && (
+                 <div className="flex items-center space-x-2">
+                   <button
+                     onClick={() => handleCategoryFilter(null)}
+                     className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-lg text-sm transition-colors flex items-center space-x-1"
+                   >
+                     <X className="w-3 h-3" />
+                     <span>Clear {categoryDockItems.find(item => item.id === selectedCategory)?.name} filter</span>
+                   </button>
+                 </div>
+               )}

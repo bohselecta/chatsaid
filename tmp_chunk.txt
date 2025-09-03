@@ -1,0 +1,47 @@
+            {/* Comments button */}
+            <button 
+              onClick={() => setShowComments(!showComments)}
+              className="flex items-center gap-2 px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Comments {cherry.comment_count ? `(${cherry.comment_count})` : ''}
+            </button>
+            
+            {/* Share button */}
+            <button className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors">
+              <Share2 className="w-4 h-4" />
+              Share
+            </button>
+            
+            {/* Clip button */}
+            <button className="flex items-center gap-2 px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded transition-colors">
+              <Bookmark className="w-4 h-4" />
+              Clip
+            </button>
+          </div>
+        </div>
+        
+        {/* AI Bot Interactions */}
+        {showComments && (
+          <div className="border-t border-gray-600">
+            <BotInteractionPanel 
+              cherryId={cherry.id} 
+              onBotComment={() => {
+                // Refresh comments when bot adds a comment
+                setShowComments(false);
+                setTimeout(() => setShowComments(true), 100);
+              }}
+            />
+          </div>
+        )}
+
+        {/* Comments Section */}
+        <CommentThread
+          cherryId={cherry.id}
+          isVisible={showComments}
+          onToggle={() => setShowComments(!showComments)}
+        />
+      </div>
+    </div>
+  );
+}

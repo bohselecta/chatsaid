@@ -1,0 +1,222 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+
+interface Community {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  branch_type: string;
+  is_primary_branch: boolean;
+  member_count: number;
+  post_count: number;
+}
+
+interface Twig {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  branch_id: string;
+  member_count: number;
+  post_count: number;
+}
+
+export default function ExplorePage() {
+  const [branches, setBranches] = useState<Community[]>([]);
+  const [twigs, setTwigs] = useState<Twig[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadBranches();
+    loadTwigs();
+  }, []);
+
+  const loadBranches = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('communities')
+        .select('*')
+        .eq('is_primary_branch', true)
+        .order('name');
+
+      if (error) throw error;
+      setBranches(data || []);
+    } catch (err) {
+      console.error('Error loading branches:', err);
+      setError('Failed to load branches');
+    }
+  };
+
+  const loadTwigs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('twigs')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) throw error;
+      setTwigs(data || []);
+    } catch (err) {
+      console.error('Error loading twigs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getBranchIcon = (type: string) => {
+    switch (type) {
+      case 'funny': return '😄';
+      case 'mystical': return '✨';
+      case 'technical': return '⚡';
+      case 'research': return '🔬';
+      case 'ideas': return '💡';
+      default: return '🌿';
+    }
+  };
+
+  const getTwigsForBranch = (branchId: string) => {
+    return twigs.filter(twig => twig.branch_id === branchId);
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-[var(--card)] rounded mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-48 bg-[var(--card)] rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="text-center">
+          <p className="text-red-400 text-lg mb-4">{error}</p>
+          <button
+            onClick={loadBranches}
+            className="px-4 py-2 bg-[var(--accent)] text-white rounded-lg hover:bg-[var(--accent)]/90 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-[var(--fg)] mb-2">
+          🌿 Explore Branches & Twigs
+        </h1>
+        <p className="text-[var(--muted)] text-lg">
+          Discover communities and niches within ChatSaid
+        </p>
+      </div>
+
+      {/* Primary Branches */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold text-[var(--fg)] mb-6">Primary Branches</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {branches.map((branch) => (
+            <div key={branch.id} className="bg-[var(--card)] rounded-xl p-6 shadow-card border border-white/5 hover:border-white/20 transition-colors">
+              <div className="text-center">
+                <div className="text-4xl mb-3">{getBranchIcon(branch.branch_type)}</div>
+                <h3 className="text-xl font-semibold text-[var(--fg)] mb-2">
+                  {branch.name}
+                </h3>
+                <p className="text-[var(--muted)] text-sm mb-4 line-clamp-2">
+                  {branch.description}
+                </p>
+                <div className="flex items-center justify-center gap-4 text-xs text-[var(--muted)] mb-4">
+                  <div className="flex items-center gap-1">
+                    <span>👥</span>
+                    <span>{branch.member_count}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>📄</span>
+                    <span>{branch.post_count}</span>
+                  </div>
+                </div>
+                <a
+                  href={`/branch/${branch.branch_type}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg text-sm font-medium hover:bg-[var(--accent)]/90 transition-colors"
+                >
+                  Explore Branch
+                  <span>→</span>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* All Twigs */}
+      <div>
+        <h2 className="text-2xl font-semibold text-[var(--fg)] mb-6">All Twigs</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {twigs.map((twig) => {
+            const branch = branches.find(b => b.id === twig.branch_id);
+            return (
+              <div key={twig.id} className="bg-[var(--card)] rounded-lg p-4 shadow-card border border-white/5 hover:border-white/20 transition-colors">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h4 className="font-semibold text-[var(--fg)]">{twig.name}</h4>
+                    {branch && (
+                      <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+                        <span>{getBranchIcon(branch.branch_type)}</span>
+                        <span>{branch.name}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right text-xs text-[var(--muted)]">
+                    <div>{twig.post_count} cherries</div>
+                    <div>{twig.member_count} members</div>
+                  </div>
+                </div>
+                <p className="text-[var(--muted)] text-sm mb-3 line-clamp-2">
+                  {twig.description}
+                </p>
+                <a
+                  href={`/branch/${branch?.branch_type}?twig=${twig.slug}`}
+                  className="inline-flex items-center gap-1 text-[var(--accent)] text-sm hover:underline"
+                >
+                  View Twig
+                  <span>→</span>
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Create Community CTA */}
+      <div className="mt-12 text-center">
+        <div className="bg-[var(--card)] rounded-xl p-8 shadow-card border border-white/5">
+          <h3 className="text-2xl font-semibold text-[var(--fg)] mb-3">
+            Can&apos;t find what you&apos;re looking for?
+          </h3>
+          <p className="text-[var(--muted)] mb-6">
+            Create a new branch or twig to start your own community
+          </p>
+          <button className="px-6 py-3 bg-[var(--accent)] text-white rounded-lg font-medium hover:bg-[var(--accent)]/90 transition-colors">
+            🌿 Create New Community
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+

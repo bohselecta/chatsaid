@@ -1,0 +1,41 @@
+Business Source License 1.1
+
+Licensor: ChatSaid, Inc.
+Licensed Work: ChatSaid Cloud Server Components (the "Work")
+The Licensed Work is © ChatSaid, Inc. and its contributors.
+Change Date: 2028-01-01
+Change License: Apache License, Version 2.0
+
+Terms
+
+1. License Grant. Subject to the terms below, Licensor grants you a non-exclusive,
+   non-transferable, royalty-free license to use, modify, create derivative works
+   of, and redistribute the Work for any non-production or non-SAAS purpose, and
+   to run the Work for yourself or your organization.
+
+2. Additional Use Grant. You may use the Work to build applications, plugins,
+   and integrations that interact with ChatSaid, and you may operate the Work for
+   internal or community (non-commercial hosting) use.
+
+3. Restrictions. You may not:
+   a) Offer the Work, or a service substantially similar to the Work, as a hosted
+      or managed service to third parties (“Competitive Hosting”) without a
+      commercial license from Licensor.
+   b) Remove or alter notices of licensing, copyright, attribution, or trademarks.
+   c) Use Licensor’s trademarks except as permitted in TRADEMARKS.md.
+
+4. Change License. On the Change Date, the Work’s license will convert
+   automatically to the Change License.
+
+5. No Trademark License. This license does not grant rights to use Licensor’s
+   names, logos, or trademarks.
+
+6. Termination. Any breach of these terms terminates your rights under this
+   license.
+
+7. Disclaimer. THE WORK IS PROVIDED “AS IS” WITHOUT WARRANTY OR CONDITION OF ANY
+   KIND. IN NO EVENT WILL LICENSOR BE LIABLE FOR ANY DAMAGES ARISING FROM USE OF
+   THE WORK.
+
+See https://mariadb.com/bsl11/ for more about BSL 1.1.
+

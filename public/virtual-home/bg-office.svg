@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22303C"/>
+      <stop offset="100%" stop-color="#0F2027"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#g2)"/>
+  <g opacity="0.2">
+    <rect x="100" y="200" width="500" height="350" fill="#FFFFFF"/>
+    <rect x="200" y="260" width="320" height="220" fill="#CFE3FF"/>
+    <rect x="1150" y="250" width="250" height="500" fill="#FFFFFF"/>
+    <rect x="1180" y="280" width="190" height="200" fill="#E6F2FF"/>
+  </g>
+  <text x="50" y="1150" fill="#ffffff" font-size="48" font-family="Arial, sans-serif" opacity="0.6">Office BG (placeholder)</text>
+</svg>

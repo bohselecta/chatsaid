@@ -1,0 +1,149 @@
+/* ChatSaid Category Color Palette */
+/* Curated colors based on color psychology and usability principles */
+
+:root {
+  /* Funny - Bright Yellow - Optimism, energy, attention-grabbing */
+  --category-funny: #FFEB3B;
+  --category-funny-hover: #FDD835;
+  --category-funny-text: #1a1a1a;
+  
+  /* Mystical - Deep Purple - Creativity, imagination, mystery */
+  --category-mystical: #9C27B0;
+  --category-mystical-hover: #8E24AA;
+  --category-mystical-text: #ffffff;
+  
+  /* Technical - Steel Blue - Trust, professionalism, calmness (improved contrast) */
+  --category-technical: #1976D2;
+  --category-technical-hover: #1565C0;
+  --category-technical-text: #ffffff;
+  
+  /* Research - Forest Green - Growth, stability, balance (improved contrast) */
+  --category-research: #2E7D32;
+  --category-research-hover: #1B5E20;
+  --category-research-text: #ffffff;
+  
+  /* Ideas - Vibrant Orange - Enthusiasm, creativity, stimulation (improved contrast) */
+  --category-ideas: #D84315;
+  --category-ideas-hover: #BF360C;
+  --category-ideas-text: #ffffff;
+}
+
+/* Category button base styles */
+.category-button {
+  @apply flex items-center space-x-1 px-1.5 lg:px-2 py-1 rounded-lg transition-all duration-200 flex-shrink-0 shadow-sm;
+}
+
+.category-button:hover {
+  @apply shadow-md scale-105;
+}
+
+.category-button.active {
+  @apply shadow-md ring-2 ring-offset-2 ring-offset-gray-900 dark:ring-offset-gray-100;
+}
+
+/* Category-specific button styles */
+.category-button.funny {
+  background-color: var(--category-funny);
+  color: var(--category-funny-text);
+}
+
+.category-button.funny:hover:not(.active) {
+  background-color: var(--category-funny-hover);
+  color: var(--category-funny-text);
+}
+
+.category-button.mystical {
+  background-color: var(--category-mystical);
+  color: var(--category-mystical-text);
+}
+
+.category-button.mystical:hover:not(.active) {
+  background-color: var(--category-mystical-hover);
+  color: var(--category-mystical-text);
+}
+
+.category-button.technical {
+  background-color: var(--category-technical);
+  color: var(--category-technical-text);
+}
+
+.category-button.technical:hover:not(.active) {
+  background-color: var(--category-technical-hover);
+  color: var(--category-technical-text);
+}
+
+.category-button.research {
+  background-color: var(--category-research);
+  color: var(--category-research-text);
+}
+
+.category-button.research:hover:not(.active) {
+  background-color: var(--category-research-hover);
+  color: var(--category-research-text);
+}
+
+.category-button.ideas {
+  background-color: var(--category-ideas);
+  color: var(--category-ideas-text);
+}
+
+.category-button.ideas:hover:not(.active) {
+  background-color: var(--category-ideas-hover);
+  color: var(--category-ideas-text);
+}
+
+/* Category badge styles */
+.category-badge {
+  @apply text-xs px-2 py-1 rounded-md font-medium flex items-center gap-1 transition-all duration-200;
+  letter-spacing: 0.01em;
+}
+
+.category-badge:hover {
+  @apply scale-105 shadow-md;
+}
+
+.category-badge.funny {
+  background-color: var(--category-funny);
+  color: var(--category-funny-text);
+}
+
+.category-badge.mystical {
+  background-color: var(--category-mystical);
+  color: var(--category-mystical-text);
+}
+
+.category-badge.technical {
+  background-color: var(--category-technical);
+  color: var(--category-technical-text);
+}
+
+.category-badge.research {
+  background-color: var(--category-research);
+  color: var(--category-research-text);
+}
+
+.category-badge.ideas {
+  background-color: var(--category-ideas);
+  color: var(--category-ideas-text);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .category-button,
+  .category-badge {
+    transition: none;
+  }
+  
+  .category-button:hover,
+  .category-badge:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .category-button,
+  .category-badge {
+    border: 2px solid currentColor;
+  }
+}

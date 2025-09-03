@@ -1,0 +1,30 @@
+name: Lighthouse CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run start &
+      - run: npx wait-on http://localhost:3000
+      - run: npm run lhci
+      - run: npm run lhci:writer
+      - name: Archive Lighthouse reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: |
+            .lighthouse/mobile/*
+            .lighthouse/desktop/*
+            .lighthouse/writer/*
+          retention-days: 14

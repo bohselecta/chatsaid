@@ -1,0 +1,21 @@
+name: e2e
+on: [push, pull_request]
+jobs:
+  pw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: corepack enable
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm dlx playwright install --with-deps
+      - run: pnpm build
+      - run: pnpm start & npx wait-on http://localhost:3000
+      - run: BASE_URL=http://localhost:3000 npx playwright test --reporter=dot
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+          HF_MODEL_ID: black-forest-labs/FLUX.1-dev
+

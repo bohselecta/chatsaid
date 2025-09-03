@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test:e2e": "playwright test",
+    "test:headful": "playwright test --headed --project=chromium",
+    "lhci:mobile": "lhci autorun --config=lighthouserc.mobile.json",
+    "lhci:desktop": "lhci autorun --config=lighthouserc.desktop.json",
+    "lhci:writer": "lhci autorun --config=lighthouserc.writer.json",
+    "lhci": "npm run lhci:mobile && npm run lhci:desktop && npm run lhci:writer"
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
+    "posthog-js": "^1.261.4"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.13.0",
+    "wait-on": "^7.0.1"
+  }
+}

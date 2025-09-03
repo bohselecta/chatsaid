@@ -1,0 +1,129 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { Sparkles, Compass, Share2, CalendarCheck2, Search } from "lucide-react";
+import { useWriter } from "@/lib/ui/useWriter";
+import { track } from "@/lib/analytics/events";
+
+// ChatSaid Home — Hero + Pillars + Assistant
+export default function ChatSaidHome() {
+  const openWriter = () => useWriter.getState().openWriter({ body: "I want to create a new post…" });
+  return (
+    <main className="min-h-screen bg-[#0E1116] text-white">
+      <Header />
+
+      {/* Hero */}
+      <section className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-10 md:grid-cols-2 md:pb-20 md:pt-16">
+        <div>
+          <h1 className="text-4xl font-semibold leading-tight md:text-6xl">
+            Say it. <span className="text-[#E11D48]">See it.</span> Share it.
+          </h1>
+          <p className="mt-4 max-w-xl text-white/75">
+            ChatSaid is your AI studio for ideas, images, and interactive posts. Create with your assistant,
+            curate boards, and publish across the web—beautifully.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/canopy" className="rounded-lg bg-[#E11D48] px-4 py-2.5 font-semibold hover:bg-[#c9103e] focus:outline-none focus:ring-2 focus:ring-[#E11D48]/60">
+              Start Creating
+            </Link>
+            <Link href="/explore" className="rounded-lg border border-white/15 px-4 py-2.5 font-semibold text-white/90 hover:bg-white/[.06]">
+              Discover Posts
+            </Link>
+          </div>
+
+          {/* Pillars */}
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Pillar icon={<Sparkles className="h-5 w-5" />} title="Create" desc="Draft with your assistant. Blend text, images, and apps." href="/canopy" />
+            <Pillar icon={<Compass className="h-5 w-5" />} title="Discover" desc="Explore boards, tags, and trending ideas." href="/explore" />
+            <Pillar icon={<Share2 className="h-5 w-5" />} title="Share" desc="Publish anywhere, or collaborate with friends." href="/about" />
+            <Pillar icon={<CalendarCheck2 className="h-5 w-5" />} title="Organize" desc="Pin to your desk, plan drops, and keep momentum." href="/help" />
+          </div>
+        </div>
+
+        {/* Visual: desk + background with Assistant widget */}
+        <div className="relative">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[.04] shadow-2xl">
+            {/* Background */}
+            <Image
+              src="/virtual-home/bg-skyline-800w.webp"
+              width={960}
+              height={600}
+              alt="Creative workspace backdrop"
+              className="h-64 w-full object-cover md:h-80"
+              priority
+            />
+            {/* Desk foreground */}
+            <Image
+              src="/virtual-home/desk-wood-800w.webp"
+              width={960}
+              height={320}
+              alt="Desk surface"
+              className="-mt-6 w-full md:-mt-8"
+              priority
+            />
+          </div>
+
+          {/* Assistant widget */}
+          <div className="absolute -right-2 bottom-4 w-[320px] max-w-[85vw]">
+            <div className="rounded-xl border border-white/15 bg-[#0b0f15] p-3 shadow-xl ring-1 ring-black/40">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="grid h-8 w-8 place-items-center rounded-full bg-[#E11D48] text-[13px] font-bold">CS</div>
+                <div className="text-sm font-semibold">ChatSaid Assistant</div>
+              </div>
+              <p className="text-sm text-white/80">
+                Tell me what you want to make. I’ll draft it, suggest visuals, and turn it into a polished post.
+              </p>
+              <button
+                aria-label="Open the writer assistant"
+                onClick={() => { track("landing_cta_click", { source: "landing" }); openWriter(); }}
+                className="mt-3 w-full rounded-lg bg-[#E11D48] px-3 py-2 text-sm font-semibold hover:bg-[#c9103e]"
+              >
+                Open the Assistant
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Writer modal is mounted globally via WriterRoot */}
+    </main>
+  );
+}
+
+function Header() {
+  return (
+    <header className="sticky top-0 z-20 border-b border-white/10 bg-[#0E1116]/80 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+        <Link href="/" className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-rose-500/40">
+          <span className="grid h-8 w-8 place-items-center rounded-md bg-[#E11D48] text-sm font-bold">CS</span>
+          <span className="text-sm font-semibold text-white/90">ChatSaid</span>
+        </Link>
+        <nav className="hidden items-center gap-3 text-sm text-white/80 md:flex">
+          <Link href="/canopy" className="rounded-md px-2 py-1 hover:bg-white/[.06]">Canopy</Link>
+          <Link href="/explore" className="rounded-md px-2 py-1 hover:bg-white/[.06]">Explore</Link>
+          <Link href="/about" className="rounded-md px-2 py-1 hover:bg-white/[.06]">About</Link>
+          <Link href="/help" className="rounded-md px-2 py-1 hover:bg-white/[.06]">Help</Link>
+        </nav>
+        <Link href="/explore" aria-label="Search and discover" className="rounded-md p-2 text-white/80 hover:bg-white/[.06] focus:outline-none focus:ring-2 focus:ring-rose-500/40">
+          <Search className="h-5 w-5" />
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+function Pillar({ icon, title, desc, href }: { icon: React.ReactNode; title: string; desc: string; href: string }) {
+  return (
+    <Link href={href} className="group flex items-start gap-3 rounded-xl border border-white/10 bg-white/[.03] p-4 hover:bg-white/[.06] focus:outline-none focus:ring-2 focus:ring-rose-500/30">
+      <div className="mt-0.5 grid h-9 w-9 place-items-center rounded-lg bg-white/10 text-white/90 group-hover:bg-white/15">
+        {icon}
+      </div>
+      <div>
+        <div className="font-semibold">{title}</div>
+        <div className="text-sm text-white/70">{desc}</div>
+      </div>
+    </Link>
+  );
+}
+

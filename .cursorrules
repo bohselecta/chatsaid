@@ -1,0 +1,56 @@
+# Cursor / Codex Operating Rules for ChatSaid
+
+[context]
+project_name = ChatSaid
+primary_goal = Implement, test, and polish the Docked Assistant Bot system described in docs/HANDOFF_BOT_SYSTEM.md
+tech_stack = Next.js (app dir), TypeScript, SWR, Framer Motion, Supabase, Redis (optional)
+
+[general]
+# Codex should:
+- Prefer small, reviewable PR-sized changes with passing checks.
+- Keep backwards compatibility with existing public API routes.
+- Avoid speculative refactors; only refactor when required by a task/test.
+- Write or update tests for each change (API + minimal e2e where applicable).
+- Keep env variable usage behind a single configuration module.
+
+[files_to_read_first]
+- docs/HANDOFF_BOT_SYSTEM.md
+- docs/AGENTS.md
+- docs/README_AGENT_SYSTEM.md
+- docs/DEMO_BOT_SYSTEM.md
+- package.json
+- next.config.js
+- app/api/**/route.ts
+- components/bot/**
+- lib/**
+- bots/usability/PRODUCT_MODEL.md
+- reports/usability.md
+- reports/usability/graph.json
+
+[definition_of_done]
+- All tasks in TASKS_CHATSAID_BOT.md have passing tests in TEST_PLAN.md.
+- pnpm typecheck && pnpm lint && pnpm test pass locally.
+- GET /api/agent/health shows healthy cache/worker or graceful fallback.
+- Demo flow in DEMO_BOT_SYSTEM.md works as written.
+- TASKS_USABILITY.md checklist complete
+- No high-severity axe violations on /, /canopy, /explore, /branch/*
+- All expected product routes present or explicitly deferred in PATCH_NOTES.md
+
+[style]
+- Follow existing ESLint/Prettier rules.
+- Use functional React components; prefer hooks.
+- Keep components small and accessible (ARIA where appropriate).
+- Use Framer Motion for panel/launcher transitions.
+
+[security]
+- Assume Supabase auth + RLS; never bypass RLS in server routes.
+- Validate all inputs on API routes (zod schemas in /lib/validators/*).
+- Rate limit sensitive endpoints (reuse cache counters).
+
+[testing]
+- API tests with Vitest + supertest (or next test runner if configured).
+- Minimal Playwright script for end‑to‑end demo checks.
+
+[commit]
+- Conventional commits: feat:, fix:, chore:, refactor:, test:, docs:
+- Reference task ids from TASKS_CHATSAID_BOT.md.

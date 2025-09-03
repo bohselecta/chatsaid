@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#g3)"/>
+  <g fill="#4b5563" opacity="0.6">
+    <rect x="100" y="600" width="160" height="400"/>
+    <rect x="300" y="500" width="220" height="500"/>
+    <rect x="570" y="650" width="180" height="350"/>
+    <rect x="800" y="520" width="250" height="480"/>
+    <rect x="1080" y="680" width="200" height="320"/>
+    <rect x="1300" y="560" width="230" height="440"/>
+  </g>
+  <circle cx="1400" cy="200" r="80" fill="#F59E0B" opacity="0.7"/>
+  <text x="50" y="1150" fill="#ffffff" font-size="48" font-family="Arial, sans-serif" opacity="0.6">Skyline BG (placeholder)</text>
+</svg>

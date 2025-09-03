@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  /* UI tokens for polish */
+  --ink: 17 24 39;            /* fg */
+  --ink-sub: 71 85 105;       /* muted */
+  --panel: 11 18 32;          /* dark panel */
+  --ring: 99 102 241;         /* indigo-500 */
+  --hair: 255 255 255;        /* border on dark */
+  --hero-fg: 17 24 39;
+  --hero-sub: 71 85 105;
+  --panel-bg: 15 23 42;
+  --panel-fg: 241 245 249;
+  --border: 0 0 0;
+  --ring: 59 130 246;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --hero-fg: 241 245 249;
+    --hero-sub: 148 163 184;
+    --panel-bg: 15 23 42;
+    --panel-fg: 241 245 249;
+    --border: 255 255 255;
+    --ring: 99 102 241;
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+
+:root {
+  --bg: #0b0b0d;
+  --fg: #f5f7fb;
+  --accent: #d11a2a; /* cherry red */
+  --muted: #9aa0a6;
+  --card: #111214;
+}
+
+@layer base {
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Focus ring for keyboard users */
+  :focus-visible {
+    outline: 3px solid rgba(209,26,42,0.24);
+    outline-offset: 2px;
+    border-radius: .25rem;
+  }
+
+  a { 
+    text-decoration: none; 
+  }
+  
+  input, textarea { 
+    color: black; 
+  }
+}
+
+@layer components {
+  @keyframes shimmer {
+    0% { background-position: -400px 0 }
+    100% { background-position: 400px 0 }
+  }
+  .skel {
+    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.12) 37%, rgba(255,255,255,.06) 63%);
+    background-size: 800px 100%;
+    animation: shimmer 1.2s infinite linear;
+  }
+  .desk-cap { background: url('/assets/desk-cap.png') center/cover no-repeat; }
+  .hero-bg  { background: url('/assets/bg-hero.png') center/cover no-repeat; }
+  /* Rings & hover helpers */
+  .focus-ring { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgb(var(--ring))] focus-visible:ring-offset-2; }
+  .card { @apply rounded-2xl border shadow-sm transition-shadow; }
+  .card--hover:hover { @apply shadow-md; }
+  /* Cherry pop animation */
+  @keyframes pop {
+    0% { transform: scale(0.96); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  .pop-anim {
+    animation: pop .28s ease;
+  }
+}
+
+/* Test styles to ensure CSS is working */
+.test-bg {
+  background-color: #0b0b0d !important;
+}
+
+.test-text {
+  color: #f5f7fb !important;
+}
+
+.test-card {
+  background-color: #111214 !important;
+}
